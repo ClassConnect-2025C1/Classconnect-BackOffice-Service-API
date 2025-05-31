@@ -1,0 +1,16 @@
+annotated-types==0.7.0
+dnspython==2.7.0
+email_validator==2.2.0
+idna==3.10
+iniconfig==2.1.0
+motor==3.7.1
+packaging==25.0
+pluggy==1.6.0
+pydantic==2.11.5
+pydantic-settings==2.9.1
+pydantic_core==2.33.2
+pymongo==4.13.0
+pytest==8.3.5
+python-dotenv==1.1.0
+typing-inspection==0.4.1
+typing_extensions==4.13.2
