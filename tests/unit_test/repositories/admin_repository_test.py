@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import datetime, timezone
 from bson import ObjectId
 from src.app.repositories.admin_repository import AdminRepository
@@ -8,7 +8,7 @@ from src.app.entities.admin_data import AdminDTA
 
 @pytest.fixture
 def mock_collection():
-    return MagicMock()
+    return AsyncMock()  # 👈 importante para métodos async
 
 
 @pytest.fixture
@@ -23,7 +23,8 @@ def repo(mock_db):
     return AdminRepository(mock_db)
 
 
-def test_create_admin_success(repo, mock_collection):
+@pytest.mark.asyncio
+async def test_create_admin_success(repo, mock_collection):
     email = "admin@example.com"
     hashed_password = "hashed_pw"
     other_id = "other123"
@@ -35,7 +36,7 @@ def test_create_admin_success(repo, mock_collection):
     ) as mock_datetime_module:
         now = datetime(2024, 1, 1, tzinfo=timezone.utc)
         mock_datetime_module.now.return_value = now
-        result = repo.create(email, hashed_password, other_id)
+        result = await repo.create(email, hashed_password, other_id)
 
     assert isinstance(result, AdminDTA)
     assert result.id == str(inserted_id)
@@ -51,7 +52,8 @@ def test_create_admin_success(repo, mock_collection):
     assert isinstance(args[0]["signup_date"], datetime)
 
 
-def test_get_by_id_success(repo, mock_collection):
+@pytest.mark.asyncio
+async def test_get_by_id_success(repo, mock_collection):
     admin_id = str(ObjectId())
     admin_data = {
         "_id": ObjectId(admin_id),
@@ -62,7 +64,7 @@ def test_get_by_id_success(repo, mock_collection):
     }
     mock_collection.find_one.return_value = admin_data
 
-    result = repo.get_by_id(admin_id)
+    result = await repo.get_by_id(admin_id)
 
     assert isinstance(result, AdminDTA)
     assert result.id == admin_id
@@ -73,16 +75,18 @@ def test_get_by_id_success(repo, mock_collection):
     mock_collection.find_one.assert_called_once_with({"_id": ObjectId(admin_id)})
 
 
-def test_get_by_id_invalid_objectid(repo, mock_collection):
+@pytest.mark.asyncio
+async def test_get_by_id_invalid_objectid(repo, mock_collection):
     invalid_id = "not_a_valid_objectid"
-    result = repo.get_by_id(invalid_id)
+    result = await repo.get_by_id(invalid_id)
     assert result is None
     mock_collection.find_one.assert_not_called()
 
 
-def test_get_by_id_not_found(repo, mock_collection):
+@pytest.mark.asyncio
+async def test_get_by_id_not_found(repo, mock_collection):
     admin_id = str(ObjectId())
     mock_collection.find_one.return_value = None
-    result = repo.get_by_id(admin_id)
+    result = await repo.get_by_id(admin_id)
     assert result is None
     mock_collection.find_one.assert_called_once_with({"_id": ObjectId(admin_id)})

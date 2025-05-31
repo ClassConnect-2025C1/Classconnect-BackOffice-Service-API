@@ -1,25 +1,26 @@
 from pydantic import EmailStr
 from datetime import datetime, timezone
 from src.app.entities.admin_data import AdminDTA
-from pymongo.database import Database
-from pymongo.collection import Collection
+from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorCollection
 from bson import ObjectId
 
 REPOSITORY = "admin"
 
 
 class AdminRepository:
-    def __init__(self, db: Database) -> None:
-        self.collection: Collection = db[REPOSITORY]
+    def __init__(self, db: AsyncIOMotorDatabase) -> None:
+        self.collection: AsyncIOMotorCollection = db[REPOSITORY]
 
-    def create(self, email: EmailStr, hashed_password: str, other_id: str) -> AdminDTA:
+    async def create(
+        self, email: EmailStr, hashed_password: str, other_id: str
+    ) -> AdminDTA:
         admin_data = {
             "email": email,
             "hashed_password": hashed_password,
             "signup_date": datetime.now(timezone.utc),
             "other_id": other_id,
         }
-        result = self.collection.insert_one(admin_data)
+        result = await self.collection.insert_one(admin_data)
 
         return AdminDTA(
             id=str(result.inserted_id),
@@ -29,13 +30,13 @@ class AdminRepository:
             other_id=other_id,
         )
 
-    def get_by_id(self, admin_id: str) -> AdminDTA | None:
+    async def get_by_id(self, admin_id: str) -> AdminDTA | None:
         try:
             _id = ObjectId(admin_id)
         except Exception:
             return None
 
-        admin_data = self.collection.find_one({"_id": _id})
+        admin_data = await self.collection.find_one({"_id": _id})
         if not admin_data:
             return None
 
