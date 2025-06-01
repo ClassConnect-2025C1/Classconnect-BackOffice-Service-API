@@ -47,3 +47,16 @@ class AdminRepository:
             signup_date=admin_data["signup_date"],
             other_id=str(admin_data["other_id"]),
         )
+
+    async def get_by_email(self, email: EmailStr) -> AdminDTA | None:
+        admin_data = await self.collection.find_one({"email": email})
+        if not admin_data:
+            return None
+
+        return AdminDTA(
+            id=str(admin_data["_id"]),
+            email=admin_data["email"],
+            hashed_password=admin_data["hashed_password"],
+            signup_date=admin_data["signup_date"],
+            other_id=str(admin_data["other_id"]),
+        )
