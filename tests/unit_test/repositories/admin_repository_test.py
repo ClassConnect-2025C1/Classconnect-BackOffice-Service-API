@@ -90,3 +90,37 @@ async def test_get_by_id_not_found(repo, mock_collection):
     result = await repo.get_by_id(admin_id)
     assert result is None
     mock_collection.find_one.assert_called_once_with({"_id": ObjectId(admin_id)})
+
+
+@pytest.mark.asyncio
+async def test_get_by_email_success(repo, mock_collection):
+    email = "admin@example.com"
+    admin_data = {
+        "_id": ObjectId(),
+        "email": email,
+        "hashed_password": "hashed_pw",
+        "signup_date": datetime(2024, 1, 1, tzinfo=timezone.utc),
+        "other_id": "other123",
+    }
+    mock_collection.find_one.return_value = admin_data
+
+    result = await repo.get_by_email(email)
+
+    assert isinstance(result, AdminDTA)
+    assert result.id == str(admin_data["_id"])
+    assert result.email == email
+    assert result.hashed_password == admin_data["hashed_password"]
+    assert result.signup_date == admin_data["signup_date"]
+    assert result.other_id == str(admin_data["other_id"])
+    mock_collection.find_one.assert_called_once_with({"email": email})
+
+
+@pytest.mark.asyncio
+async def test_get_by_email_not_found(repo, mock_collection):
+    email = "notfound@example.com"
+    mock_collection.find_one.return_value = None
+
+    result = await repo.get_by_email(email)
+
+    assert result is None
+    mock_collection.find_one.assert_called_once_with({"email": email})
