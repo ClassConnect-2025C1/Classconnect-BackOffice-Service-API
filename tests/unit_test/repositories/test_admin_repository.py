@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import datetime, timezone
 from bson import ObjectId
 from src.app.repositories.admin_repository import AdminRepository
-from src.app.entities.admin_data import AdminDTA
+from src.app.entities.admin_entity import AdminDTA
 
 
 @pytest.fixture

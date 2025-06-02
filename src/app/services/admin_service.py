@@ -1,6 +1,10 @@
 from src.app.repositories.admin_repository import AdminRepository
-from src.app.exceptions.exceptions import AdminNotFoundError, AdminAlreadyExistsError
-from src.app.security.security import hash_password
+from src.app.exceptions.exceptions import (
+    AdminNotFoundError,
+    AdminAlreadyExistsError,
+    WrongPasswordError,
+)
+from src.app.security.security import hash_password, verify_password
 
 
 class AdminService:
@@ -8,15 +12,26 @@ class AdminService:
         self.repository = repository
 
     async def create_admin(self, new_email: str, new_password: str, creator_id: str):
-        self.assertAdminIDExist(creator_id)
-        self.assertAdminEmailNotExist(new_email)
+        await self.assertAdminIDExist(creator_id)
+        await self.assertAdminEmailNotExist(new_email)
         password_hashed = hash_password(new_password)
         return await self.repository.create(new_email, password_hashed, creator_id)
 
-    def assertAdminEmailNotExist(self, email):
-        if self.repository.get_by_email(email):
+    async def login_admin(self, email: str, password: str):
+        admin = await self.repository.get_by_email(email)
+        if not admin:
+            raise AdminNotFoundError(email)
+        await self.assertCorrectPassword(email, password, admin)
+        return admin
+
+    async def assertCorrectPassword(self, email, password, admin):
+        if not verify_password(password, admin.hashed_password):
+            raise WrongPasswordError(email)
+
+    async def assertAdminEmailNotExist(self, email):
+        if await self.repository.get_by_email(email):
             raise AdminAlreadyExistsError(email)
 
-    def assertAdminIDExist(self, other_id):
-        if not self.repository.get_by_id(other_id):
+    async def assertAdminIDExist(self, other_id):
+        if not await self.repository.get_by_id(other_id):
             raise AdminNotFoundError(other_id)
