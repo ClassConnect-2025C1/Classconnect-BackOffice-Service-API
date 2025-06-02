@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from .config.config import get_settings
-from .routes import health, admin_router
+from src.app.config.config import get_settings
+from src.app.routes import health, admin_router
 from fastapi.middleware.cors import CORSMiddleware
 
 settings = get_settings()
@@ -9,9 +9,10 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    from .db.db_client import get_client
+    from src.app.db.db_client import get_client
 
-    await get_client().admin.command("ping")  # fail fast
+    await get_client().admin.command("ping")
+    print(f"🚀 Servidor escuchando en http://{settings.host}:{settings.port}")
     yield
 
     get_client().close()
