@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime, timezone
 from pydantic import ValidationError
 from bson import ObjectId
-from src.app.models.admins import Admin
+from src.app.models.admin_model import Admin
 
 
 def test_admin_creation_with_valid_data():
