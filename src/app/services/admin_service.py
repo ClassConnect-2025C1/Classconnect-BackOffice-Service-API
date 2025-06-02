@@ -16,6 +16,7 @@ class AdminService:
         await self.assertAdminEmailNotExist(new_email)
         password_hashed = hash_password(new_password)
         return await self.repository.create(new_email, password_hashed, creator_id)
+        # return await self.repository.create(new_email, new_password, creator_id)
 
     async def login_admin(self, email: str, password: str):
         admin = await self.repository.get_by_email(email)
@@ -26,6 +27,7 @@ class AdminService:
 
     async def assertCorrectPassword(self, email, password, admin):
         if not verify_password(password, admin.hashed_password):
+            # if not password == admin.hashed_password:
             raise WrongPasswordError(email)
 
     async def assertAdminEmailNotExist(self, email):
