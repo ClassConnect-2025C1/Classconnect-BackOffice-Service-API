@@ -20,7 +20,7 @@ def get_admin_service(db=Depends(get_db)) -> AdminService:
     return service
 
 
-router = APIRouter(prefix="/admin", tags=["admin"])
+router = APIRouter(tags=["admin"])
 
 
 @router.post("/register")
