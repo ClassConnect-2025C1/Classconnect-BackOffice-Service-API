@@ -1,12 +1,12 @@
-from db.db_client import get_db
-from repositories.admin_repository import AdminRepository
-from services.admin_service import AdminService
+from src.app.db.db_client import get_db
+from src.app.repositories.admin_repository import AdminRepository
+from src.app.services.admin_service import AdminService
 
 from fastapi import APIRouter, Depends, HTTPException
-from security.security import oauth2_scheme, create_access_token, decode_token
-from schemas.admin_schemas import RegisterRequest, LoginRequest, TokenResponse
+from src.app.security.security import oauth2_scheme, create_access_token, decode_token
+from src.app.schemas.admin_schemas import RegisterRequest, LoginRequest, TokenResponse
 
-from exceptions.exceptions import (
+from src.app.exceptions.exceptions import (
     AdminNotFoundError,
     AdminAlreadyExistsError,
     GetDataFromTokenError,
