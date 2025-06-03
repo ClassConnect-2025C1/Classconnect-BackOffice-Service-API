@@ -19,3 +19,14 @@ class WrongPasswordError(Exception):
 class GetDataFromTokenError(Exception):
     def __init__(self):
         super().__init__(f"Error getting data from token")
+
+
+class UserNotFoundError(Exception):
+    def __init__(self, user_id: str):
+        self.user_id = user_id
+        super().__init__(f"User with ID '{user_id}' not found.")
+
+
+class BadRequestError(Exception):
+    def __init__(self):
+        super().__init__(f"Bad request")
