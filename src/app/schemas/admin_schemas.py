@@ -15,3 +15,11 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class BlockUserRequest(BaseModel):
+    to_block: bool
+
+
+class ChangeRoleRequest(BaseModel):
+    rol: str
