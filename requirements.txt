@@ -4,6 +4,7 @@ black==25.1.0
 certifi==2025.4.26
 charset-normalizer==3.4.2
 click==8.2.1
+coverage==7.8.2
 dnspython==2.7.0
 ecdsa==0.19.1
 email_validator==2.2.0
@@ -27,6 +28,7 @@ pydantic_core==2.33.2
 pymongo==4.13.0
 pytest==8.3.5
 pytest-asyncio==1.0.0
+pytest-cov==6.1.1
 python-dotenv==1.1.0
 python-jose==3.5.0
 requests==2.32.3
