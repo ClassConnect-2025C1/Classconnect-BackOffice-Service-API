@@ -6,15 +6,15 @@ from src.app.exceptions.exceptions import UserNotFoundError, BadRequestError
 
 async def block_user_auth(id: str, to_block: bool):
     prefix = await get_auth_url()
-    AUTH_SERVICE_URL = f"{prefix}/block/{id}"
+    AUTH_SERVICE_URL = f"{prefix}/auth/block/{id}"
     payload = {"block": to_block}
     return await send_patch_request(id, AUTH_SERVICE_URL, payload)
 
 
 async def change_rol_auth(id: str, new_rol: str):
     prefix = await get_auth_url()
-    AUTH_SERVICE_URL = f"{prefix}/rol/{id}"
-    payload = {"rol": new_rol}
+    AUTH_SERVICE_URL = f"{prefix}/auth/rol/{id}"
+    payload = {"role": new_rol}
     return await send_patch_request(id, AUTH_SERVICE_URL, payload)
 
 

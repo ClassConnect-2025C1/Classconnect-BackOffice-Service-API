@@ -98,7 +98,7 @@ async def test_block_user_auth_calls_send_patch(monkeypatch):
     monkeypatch.setattr(auth_external, "send_patch_request", send_patch_mock)
     result = await auth_external.block_user_auth("user5", True)
     send_patch_mock.assert_awaited_with(
-        "user5", "http://fake-auth-service/block/user5", {"block": True}
+        "user5", "http://fake-auth-service/auth/block/user5", {"block": True}
     )
     assert result is None
 
@@ -114,6 +114,6 @@ async def test_change_rol_auth_calls_send_patch(monkeypatch):
     monkeypatch.setattr(auth_external, "send_patch_request", send_patch_mock)
     result = await auth_external.change_rol_auth("user6", "admin")
     send_patch_mock.assert_awaited_with(
-        "user6", "http://fake-auth-service/rol/user6", {"rol": "admin"}
+        "user6", "http://fake-auth-service/auth/rol/user6", {"role": "admin"}
     )
     assert result is None
