@@ -102,7 +102,7 @@ async def block_user(
     try:
         user = decode_token(token)
         await service.block_user(user_id, body.to_block)
-        return {"message": "User blocked" if body else "User unblocked"}
+        return {"message": "User blocked" if body.to_block else "User unblocked"}
     except GetDataFromTokenError:
         raise HTTPException(status_code=400, detail="Error getting data from token")
     except UserNotFoundError as e:
