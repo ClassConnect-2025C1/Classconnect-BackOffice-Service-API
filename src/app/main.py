@@ -12,7 +12,6 @@ async def lifespan(app: FastAPI):
     from src.app.db.db_client import get_client
 
     await get_client().admin.command("ping")
-    print(f"🚀 Servidor escuchando en http://{settings.host}:{settings.port}")
     yield
 
     get_client().close()
