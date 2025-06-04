@@ -1,8 +1,5 @@
-from pydantic import EmailStr
 from datetime import datetime, timezone
-from src.app.entities.admin_entity import AdminDTA
 from motor.motor_asyncio import AsyncIOMotorDatabase, AsyncIOMotorCollection
-from bson import ObjectId
 
 REPOSITORY = "logs"
 
@@ -13,7 +10,7 @@ class LogRepository:
 
     async def create_log(self, user_id: str, action: str):
         log_info = {
-            "user_id": ObjectId(user_id),
+            "user_id": user_id,
             "action": action,
             "timestamp": datetime.now(timezone.utc),
         }
