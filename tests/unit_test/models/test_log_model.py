@@ -13,7 +13,7 @@ def test_action_enum_values():
 
 
 def test_log_action_creation_and_serialization():
-    user_id = ObjectId()
+    user_id = ""
     log_id = ObjectId()
     action = ActionEnum.block
     log_action = LogAction(_id=log_id, action=action, user_id=user_id)
@@ -31,7 +31,7 @@ def test_log_action_creation_and_serialization():
 
 
 def test_log_action_default_id():
-    user_id = ObjectId()
+    user_id = ""
     log_action = LogAction(action=ActionEnum.teacher, user_id=user_id)
     assert log_action.id is None
     serialized = log_action.model_dump(by_alias=True)

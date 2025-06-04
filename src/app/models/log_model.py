@@ -15,7 +15,7 @@ class LogAction(BaseModel):
     id: ObjectId | None = Field(default=None, alias="_id")
     action: ActionEnum
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    user_id: ObjectId
+    user_id: str
 
     model_config = ConfigDict(validate_by_name=True, arbitrary_types_allowed=True)
 
