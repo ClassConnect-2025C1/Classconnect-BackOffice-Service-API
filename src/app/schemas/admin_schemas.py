@@ -2,7 +2,6 @@ from pydantic import BaseModel, EmailStr
 
 
 class RegisterRequest(BaseModel):
-    name: str
     email: EmailStr
     password: str
 
@@ -23,3 +22,12 @@ class BlockUserRequest(BaseModel):
 
 class ChangeRoleRequest(BaseModel):
     rol: str
+
+
+class GetUserInfoResponse(BaseModel):
+    id: str
+    name: str
+    last_name: str
+    email: EmailStr
+    role: str
+    is_locked: bool
