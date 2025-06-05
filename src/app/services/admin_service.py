@@ -5,6 +5,8 @@ from src.app.exceptions.exceptions import (
     WrongPasswordError,
 )
 from src.app.security.security import hash_password, verify_password
+from src.app.externals.auth_external import get_user_info_auth, get_user_info_users
+from src.app.schemas.admin_schemas import GetUserInfoResponse
 
 
 class AdminService:
@@ -37,3 +39,14 @@ class AdminService:
     async def assertAdminIDExist(self, other_id):
         if not await self.repository.get_by_id(other_id):
             raise AdminNotFoundError(other_id)
+
+    async def get_users_info(self):
+        auth_list = await get_user_info_auth()
+        user_list = await get_user_info_users()
+        auth_dict = {entry["id"]: entry["is_locked"] for entry in auth_list}
+        responses = [
+            GetUserInfoResponse(**user, is_locked=auth_dict[user["id"]])
+            for user in user_list
+            if user["id"] in auth_dict
+        ]
+        return responses
