@@ -141,3 +141,24 @@ async def change_user_role(
         raise HTTPException(
             status_code=500, detail=f"An unexpected error occurred: {str(e)}"
         )
+
+
+@router.get("/users_info")
+async def get_users_info(
+    token: str = Depends(oauth2_scheme),
+    service: AdminService = Depends(get_admin_service),
+):
+    try:
+        user = decode_token(token)
+        await service.get_users_info()
+        return await service.get_users_info()
+    except GetDataFromTokenError:
+        raise HTTPException(status_code=400, detail="Error getting data from token")
+    except AdminNotFoundError as e:
+        raise HTTPException(
+            status_code=404, detail=f"Admin with id '{e.creator_id}' not found."
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"An unexpected error occurred: {str(e)}"
+        )
