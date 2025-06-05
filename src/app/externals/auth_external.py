@@ -40,3 +40,41 @@ async def send_patch_request(id, AUTH_SERVICE_URL, payload):
     except requests.exceptions.RequestException as e:
         logging.error(f"Request to auth service failed: {e}")
         raise Exception("Auth service request failed") from e
+
+
+async def get_user_info_auth():
+    prefix = await get_auth_url()
+    AUTH_SERVICE_URL = f"{prefix}/auth"
+    try:
+        response = requests.get(AUTH_SERVICE_URL, timeout=5)
+        logging.info(f"Auth service response: {response.status_code}, {response.text}")
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            raise UserNotFoundError(user_id="unknown")
+        else:
+            raise Exception("Unexpected error from auth service")
+
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request to auth service failed: {e}")
+        raise Exception("Auth service request failed") from e
+
+
+async def get_user_info_users():
+    prefix = os.getenv("URL_USERS")
+    if prefix is None:
+        raise RuntimeError("Environment variable 'URL_USERS' is not set")
+    USERS_SERVICE_URL = f"{prefix}/users"
+    try:
+        response = requests.get(USERS_SERVICE_URL, timeout=5)
+        logging.info(f"Auth service response: {response.status_code}, {response.text}")
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            raise UserNotFoundError(user_id="unknown")
+        else:
+            raise Exception("Unexpected error from auth service")
+
+    except requests.exceptions.RequestException as e:
+        logging.error(f"Request to auth service failed: {e}")
+        raise Exception("Auth service request failed") from e
