@@ -53,7 +53,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: ClassConnect-2025C1/BackOffice_Service
+          slug: ClassConnect-2025C1/Classconnect-BackOffice-Service-API
           files: ./coverage.xml
           fail_ci_if_error: true
           verbose: true
