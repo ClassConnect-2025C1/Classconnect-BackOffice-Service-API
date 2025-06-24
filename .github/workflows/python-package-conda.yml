@@ -64,9 +64,7 @@ jobs:
           COV=$(awk '/^TOTAL/{print substr($NF,1,length($NF)-1)}' < <(coverage report))
           echo "Coverage obtained: $COV%"
           python - <<'PY'
-          import os, sys
-          cov = float(os.environ["COV"])
-          if cov < 75:
+          if COV < 75:
               print("❌ Coverage below 75 %. Failing.")
               sys.exit(1)
           print("✅ Coverage OK.")
