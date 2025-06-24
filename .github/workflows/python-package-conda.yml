@@ -69,7 +69,6 @@ jobs:
               sys.exit(1)
           else:
               print('✅ Coverage OK.')"
-          PY
 
       - name: 🚀 Deploy to Render (main branch only)
         if: github.ref == 'refs/heads/main' && success()
