@@ -3,11 +3,11 @@ FROM python:3.11-slim AS builder
 WORKDIR /app
 
 # copy the *folder* instead of individual files
-COPY requirements/ ./requirements/
+COPY requirements.txt .
 
 # build wheels for runtime deps only
 RUN pip install --upgrade pip && \
-    pip wheel --wheel-dir dist -r requirements/base.txt
+    pip wheel --wheel-dir dist -r requirements.txt
 
 # --- runtime stage ---------------------------------------------------------
 FROM python:3.11-slim
