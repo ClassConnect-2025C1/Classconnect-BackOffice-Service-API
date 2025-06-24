@@ -63,11 +63,11 @@ jobs:
           echo "📊 Checking minimum required coverage…"
           COV=$(awk '/^TOTAL/{print substr($NF,1,length($NF)-1)}' < <(coverage report))
           echo "Coverage obtained: $COV%"
-          python - <<'PY'
-          if COV < 75:
-              print("❌ Coverage below 75 %. Failing.")
-              sys.exit(1)
-          print("✅ Coverage OK.")
+          python -c "import sys; cov = float('$COV'); \
+          if cov < 75: \
+              print('❌ Coverage below 75 %. Failing.'); sys.exit(1) \
+          else: \
+              print('✅ Coverage OK.')"
           PY
 
       - name: 🚀 Deploy to Render (main branch only)
