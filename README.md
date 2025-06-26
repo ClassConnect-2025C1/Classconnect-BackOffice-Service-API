@@ -14,6 +14,9 @@ docker-compose up --build
 src/app/
 ├── config/ # App configuration (env, settings)
 ├── db/ # Database connection (MongoDB client)
+├── entities/ # Structure models used within the app
+├── exceptions/ # Custom exceptions used within the application.
+├── externals/ # Logic for making requests to other microservices.
 ├── models/ # Pydantic models (data layer)
 ├── routes/ # API endpoints (routers)
 ├── schemas/ # Request/response schemas
