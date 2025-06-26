@@ -1,0 +1,408 @@
+openapi: 3.0.3
+info:
+  title: Admin API
+  description: API para gestión de administradores y usuarios
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:8000
+    description: Servidor de desarrollo
+  - url: https://api.example.com
+    description: Servidor de producción
+
+tags:
+  - name: admin
+    description: Operaciones de administración
+  - name: health
+    description: Verificación de estado del servicio
+
+security:
+  - BearerAuth: []
+
+paths:
+  /:
+    get:
+      tags:
+        - health
+      summary: Liveness probe
+      description: Verifica el estado de salud del servicio
+      operationId: healthcheck
+      responses:
+        '200':
+          description: Servicio funcionando correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+
+  /register:
+    post:
+      tags:
+        - admin
+      summary: Registrar nuevo administrador
+      description: Crea un nuevo administrador en el sistema
+      operationId: registerAdmin
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Administrador registrado exitosamente
+        '400':
+          description: Error en la solicitud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                admin_exists:
+                  summary: Administrador ya existe
+                  value:
+                    detail: "Admin with email 'admin@example.com' already exists."
+                token_error:
+                  summary: Error en el token
+                  value:
+                    detail: "Error getting data from token"
+        '401':
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "Creator with id 'creator123' not found."
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /login:
+    post:
+      tags:
+        - admin
+      summary: Iniciar sesión de administrador
+      description: Autentica un administrador y devuelve un token de acceso
+      operationId: loginAdmin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Credenciales incorrectas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "Wrong password for admin with email 'admin@example.com'."
+        '404':
+          description: Administrador no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "Admin with email 'admin@example.com' not found."
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /block/{user_id}:
+    patch:
+      tags:
+        - admin
+      summary: Bloquear/desbloquear usuario
+      description: Bloquea o desbloquea un usuario del sistema
+      operationId: blockUser
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID del usuario a bloquear/desbloquear
+          schema:
+            type: string
+            example: "user123"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlockUserRequest'
+      responses:
+        '200':
+          description: Operación exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User blocked"
+        '400':
+          description: Error en la solicitud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "Error getting data from token"
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "User with id 'user123' not found."
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /change_role/{user_id}:
+    patch:
+      tags:
+        - admin
+      summary: Cambiar rol de usuario
+      description: Cambia el rol de un usuario en el sistema
+      operationId: changeUserRole
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: ID del usuario cuyo rol se va a cambiar
+          schema:
+            type: string
+            example: "user123"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeRoleRequest'
+      responses:
+        '200':
+          description: Rol cambiado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User role changed"
+        '400':
+          description: Error en la solicitud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                token_error:
+                  summary: Error en el token
+                  value:
+                    detail: "Error getting data from token"
+                invalid_role:
+                  summary: Rol inválido
+                  value:
+                    detail: "Invalid role provided. Possible roles are 'student' or 'teacher'."
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "User with id 'user123' not found."
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users_info:
+    get:
+      tags:
+        - admin
+      summary: Obtener información de usuarios
+      description: Obtiene la información de todos los usuarios del sistema
+      operationId: getUsersInfo
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Información de usuarios obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetUserInfoResponse'
+        '400':
+          description: Error en la solicitud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "Error getting data from token"
+        '404':
+          description: Administrador no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                detail: "Admin with id 'admin123' not found."
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT para autenticación
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email del nuevo administrador
+          example: "admin@example.com"
+        password:
+          type: string
+          description: Contraseña del nuevo administrador
+          example: "securePassword123"
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email del administrador
+          example: "admin@example.com"
+        password:
+          type: string
+          description: Contraseña del administrador
+          example: "securePassword123"
+
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: Token de acceso JWT
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        token_type:
+          type: string
+          description: Tipo de token
+          default: "bearer"
+          example: "bearer"
+
+    BlockUserRequest:
+      type: object
+      required:
+        - to_block
+      properties:
+        to_block:
+          type: boolean
+          description: Indica si se debe bloquear (true) o desbloquear (false) el usuario
+          example: true
+
+    ChangeRoleRequest:
+      type: object
+      required:
+        - rol
+      properties:
+        rol:
+          type: string
+          description: Nuevo rol para el usuario
+          enum: ["student", "teacher"]
+          example: "teacher"
+
+    GetUserInfoResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID único del usuario
+          example: "user123"
+        name:
+          type: string
+          description: Nombre del usuario
+          example: "Juan"
+        last_name:
+          type: string
+          description: Apellido del usuario
+          example: "Pérez"
+        email:
+          type: string
+          format: email
+          description: Email del usuario
+          example: "juan.perez@example.com"
+        role:
+          type: string
+          description: Rol del usuario
+          example: "student"
+        is_locked:
+          type: boolean
+          description: Indica si el usuario está bloqueado
+          example: false
+
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Descripción del error
+          example: "Error message description"
