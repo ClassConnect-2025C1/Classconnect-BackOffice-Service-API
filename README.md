@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/ClassConnect-2025C1/Classconnect-BackOffice-Service-API/graph/badge.svg?token=T78h7PiHEz)](https://codecov.io/gh/ClassConnect-2025C1/Classconnect-BackOffice-Service-API)
+
 # TemplatePythonMongodb
 
 Template repository for projects using Python and MongoDB.
