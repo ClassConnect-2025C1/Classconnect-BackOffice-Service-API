@@ -1,6 +1,8 @@
-# Backoffice Service
+[![Python Package without Conda](https://github.com/ClassConnect-2025C1/Classconnect-BackOffice-Service-API/actions/workflows/python-package-conda.yml/badge.svg)](https://github.com/ClassConnect-2025C1/Classconnect-BackOffice-Service-API/actions/workflows/python-package-conda.yml)
 
-The project can be run using Docker Compose, which will set up a MongoDB container and a Python application container:
+[![codecov](https://codecov.io/gh/ClassConnect-2025C1/Classconnect-BackOffice-Service-API/graph/badge.svg?token=T78h7PiHEz)](https://codecov.io/gh/ClassConnect-2025C1/Classconnect-BackOffice-Service-API)
+
+# Backoffice Service
 
 
 ---
