@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
     get_client().close()
 
 
-app = FastAPI(title="ClassConnect Template", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="ClassConnect BackOffice", version="1.0.0", lifespan=lifespan)
 
 app.include_router(health.router)
 app.include_router(admin_router.router, prefix="/admin", tags=["admin"])

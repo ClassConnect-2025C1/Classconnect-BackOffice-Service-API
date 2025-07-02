@@ -1,12 +1,15 @@
-# TemplatePythonMongodb
-
-Template repository for projects using Python and MongoDB.
+# Backoffice Service
 
 The project can be run using Docker Compose, which will set up a MongoDB container and a Python application container:
 
-```bash
-docker-compose up --build
-```
+
+---
+
+# Install
+
+git clone https://github.com/ClassConnect-2025C1/Classconnect-BackOffice-Service-API#
+
+---
 
 ## Project Structure
 
@@ -42,13 +45,7 @@ README.md # You are here
 All other dependencies can be installed using the requirements files, using the following command:
 
 ```bash
-pip install -r requirements/dev.txt
-```
-
-Or, if you wish to install the production dependencies only, use:
-
-```bash
-pip install -r requirements/prod.txt
+pip install -r requirements.txt
 ```
 
 #### Command
@@ -96,3 +93,8 @@ To stop the application, use the following command:
 ```bash
 docker-compose down
 ```
+
+## 📚 Documentación de la API
+
+ - Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)
+ - Production: [Backoffice docs](https://classconnect-backoffice-service-api.onrender.com/docs)
